@@ -29,6 +29,7 @@ class HelloControllerIT {
         this.mockMvc = mockMvc;
     }
 
+    
     @Test
     void hello_delegates_to_repository_when_name_param_is_present() throws Exception {
         when(repository.getHelloFor(any())).thenReturn(new HelloData("test"));
