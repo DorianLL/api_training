@@ -1,37 +1,42 @@
 package fr.esiea.ex4A.inscription;
 
-import org.springframework.stereotype.Repository;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class UserRepository {
     public final List<UserData> userData;
-
+    public final Map<UserData, Integer> dataMap;
+    
     public UserRepository() {
         userData = new ArrayList<>();
-        userData.add(new UserData("toto@toto.fr", "toto", "totolatomate", "FR", "M", "F"));
-        userData.add(new UserData("titi@titi.fr", "titi", "titille", "FR", "M", "M"));
-        userData.add(new UserData("tata@tata.fr", "tata", "tatache", "FR", "F", "M"));
-        userData.add(new UserData("tete@tete.fr", "tete", "teteau", "FR", "F", "F"));
+        this.dataMap = new HashMap<>();
+        userData.add(new UserData("mami@gmail.com", "mami", "mamimamai", "FR", "F", "F"));
+        userData.add(new UserData("papi@gmail.com", "papi", "papipapai", "FR", "M", "M"));
+        userData.add(new UserData("tati@gmail.com", "tati", "tatitatai", "FR", "F", "M"));
+        userData.add(new UserData("sister@gmail.com", "sister", "sistersistai", "FR", "F", "F"));
     }
 
     public UserData getUserByName(String name) {
-        return userData.stream().filter(UserData -> UserData.userName.equals(name)).findAny().orElse(null);
+        return userData.stream().filter(UserData -> UserData.name.equals(name)).findAny().orElse(null);
     }
 
     public void addUser(UserData UserData) {
         userData.add(UserData);
     }
 
-    public List<MatchData> userMatch(String name) {
-        List<MatchData> MatchDatas = new ArrayList<>();
-        UserData user = getUserByName(name);
-        List<UserData> userDataFiltered = userData.stream().filter(UserData -> UserData.userSexPref.equals(user.userSexPref) && !UserData.userName.equals(user.userName)).collect(Collectors.toList());
-        userDataFiltered.forEach(UserData -> MatchDatas.add(new MatchData(UserData.userName, UserData.userTweeter)));
-        return MatchDatas;
+    public int getUserAge(UserData userData) {
+        return dataMap.get(userData);
     }
 
+    public List<UserData> userMatch(UserData currentUserInfo) {
+        return userData.stream().filter(userInfo -> Math.abs(getUserAge(currentUserInfo) - getUserAge(userInfo)) <= 2
+            && currentUserInfo != userInfo && currentUserInfo.sexPref.equals(userInfo.sex)
+            && currentUserInfo.sex.equals(userInfo.sexPref)).collect(Collectors.toList());
+    }
 }

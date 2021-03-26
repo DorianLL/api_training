@@ -1,21 +1,24 @@
 package fr.esiea.ex4A.inscription;
 
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import fr.esiea.ex4A.service.UserService;
 
 @RestController
 public class MatchController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public MatchController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public MatchController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/api/matches")
-    public List<MatchData> matches(@RequestParam String userName, @RequestParam String userCountry) {
-        return userRepository.userMatch(userName);
+    public List<UserData> matches(@RequestParam String userName, @RequestParam String userCountry) {
+        return userService.matches(userName, userCountry);
     }
 }
